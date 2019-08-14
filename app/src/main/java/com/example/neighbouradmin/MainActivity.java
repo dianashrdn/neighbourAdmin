@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -34,20 +36,17 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, LocationListener {
     private Toolbar toolbar;
-    //GeoPoint currentLocation;
-    //LocationManager locationManager;
-    //SharedPreferences sharedPreferences;
-    //String AdminId;
+    GeoPoint currentLocation;
+    LocationManager locationManager;
+    SharedPreferences sharedPreferences;
 
-    //final int LOGIN_REQUEST = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -61,7 +60,20 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //home fragment
+        navigationView.setCheckedItem(R.id.nav_home);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = null;
+        try
+        {
+            fragment = HomeFragment.class.newInstance();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit();
     }
+
 
 
     @Override
@@ -102,7 +114,7 @@ public class MainActivity extends AppCompatActivity
 
         switch (itemId){
             case R.id.nav_home:
-                //fragment = new HomeFragment();
+                fragment = new HomeFragment();
                 break;
             case R.id.nav_incident:
                 fragment = new IncidentListFragment();
@@ -123,6 +135,7 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
 
     }
+
 
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -146,5 +159,27 @@ public class MainActivity extends AppCompatActivity
 
         return true;
     }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        currentLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+    }
+
+
 
 }

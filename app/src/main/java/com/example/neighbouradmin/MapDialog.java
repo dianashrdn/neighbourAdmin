@@ -51,11 +51,11 @@ public class MapDialog extends AppCompatDialogFragment {
 
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                         new LatLng( incident.getLocation().getLatitude(),
-                                incident.getLocation().getLongitude()),15));
+                                    incident.getLocation().getLongitude()),15));
                 googleMap.addMarker(new MarkerOptions() .title(incident.getDescription())
-                        .position(new LatLng(   incident.getLocation().getLatitude(),
-                                incident.getLocation().getLongitude()))
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                                    .position(new LatLng(   incident.getLocation().getLatitude(),
+                                                            incident.getLocation().getLongitude()))
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
             }
         });
 

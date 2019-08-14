@@ -1,12 +1,16 @@
 package com.example.neighbouradmin.Controller;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.neighbouradmin.ResidentAdapter;
 import com.example.neighbouradmin.model.Resident;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -57,5 +61,10 @@ public class ResidentController {
         };
         getResidentThread.run();
     }
+
+    /*public boolean isVerify(){
+        final int VERIFIED
+    }*/
+
 
 }
