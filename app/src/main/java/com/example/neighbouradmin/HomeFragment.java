@@ -7,20 +7,14 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.example.neighbouradmin.Controller.IncidentController;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.LatLng;
 
-public class HomeFragment extends Fragment implements LocationListener{
+public class HomeFragment extends Fragment implements LocationListener {
     MapView mapView;
     GoogleMap googleMap;
     private Location location;
@@ -28,7 +22,7 @@ public class HomeFragment extends Fragment implements LocationListener{
 
     @Nullable
     @Override
-    public View onCreateView (LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.home_fragment, container, false);
         getActivity().setTitle("Home Page");
         mapView = rootView.findViewById(R.id.homeMap);
@@ -39,40 +33,31 @@ public class HomeFragment extends Fragment implements LocationListener{
         try {
             locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (location != null)
-                this.location = location;
-            else {
-                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                if (location != null)
-                    this.location = location;
-                else
-                    this.location = new Location(LocationManager.GPS_PROVIDER);
-            }
-
+            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
         } catch (SecurityException e) {
             e.printStackTrace();
         }
 
         MapsInitializer.initialize(getActivity().getApplicationContext());
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap map) {
-                googleMap = map;
+        if (location != null)
+            mapView.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap map) {
+                    googleMap = map;
 
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(location.getLatitude(), location.getLongitude()), 15));
-                IncidentController incidentController = new IncidentController(getContext());
-                incidentController.getIncidentsLocation(googleMap);
-                try {
-                    googleMap.setMyLocationEnabled(true);
-                    googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-                } catch (SecurityException e) {
-                    e.printStackTrace();
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                            new LatLng(location.getLatitude(), location.getLongitude()), 15));
+                    IncidentController incidentController = new IncidentController(getContext());
+                    incidentController.getIncidentsLocation(googleMap);
+                    try {
+                        googleMap.setMyLocationEnabled(true);
+                        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
         return rootView;
     }
 
@@ -95,7 +80,6 @@ public class HomeFragment extends Fragment implements LocationListener{
     public void onProviderDisabled(String s) {
 
     }
-
 
 
 }
